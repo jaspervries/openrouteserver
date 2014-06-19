@@ -1,0 +1,64 @@
+#!/bin/bash
+### BEGIN INIT INFO
+# Provides:             openrouteserver
+# Required-Start:       $local_fs $syslog httpd mysqld
+# Required-Stop:        $local_fs $syslog
+# Default-Start:        2 3 4 5
+# Default-Stop:         0 1 6
+# Short-Description:    Open Route Server daemon
+### END INIT INFO
+
+INSTALL_DIR=/var/www/openrouteserver
+PID_FILE=$INSTALL_DIR/pid
+
+start() {
+        if [ -f $PID_FILE ]
+        then
+            echo "service is running"
+        else
+            date >> $INSTALL_DIR/reboot.log
+            php -f $INSTALL_DIR/mainloop.php > /dev/null 2>&1 &
+            echo $! > $PID_FILE
+            echo "service started"
+        fi
+}
+
+stop() {
+        if [ -f $PID_FILE ]
+        then
+            kill `cat $PID_FILE`
+            rm $PID_FILE
+            echo "service stopped";
+        else
+            echo "service is not running";
+        fi
+}
+
+status() {
+        if [ -f $PID_FILE ]
+        then
+            echo "service is running: "`cat $PID_FILE`;
+        else
+            echo "service is not running";
+        fi
+}
+
+case "$1" in
+    start)
+        start
+        ;;
+    stop)
+        stop
+        ;;
+    status)
+        status $0
+        ;;
+    restart|reload|condrestart)
+		stop
+        start
+        ;;
+    *)
+        echo $"Usage: $0 {start|stop|restart|reload|status}"
+        exit 1
+esac
+exit 0
