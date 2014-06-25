@@ -22,10 +22,10 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>Open Route Server - Route bewerken</title>
-<script type="text/javascript" language="javascript" src="../jquery/jquery-2.1.0.min.js"></script>
-<script type="text/javascript" language="javascript" src="../jquery/jquery-ui-1.10.4.min.js"></script>
+<script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-2.1.0.min.js"></script>
+<script type="text/javascript" language="javascript" src="https://code.jquery.com/ui/1.10.4/jquery-ui.min.js"></script>
 <script type="text/javascript" language="javascript" src="editroute.js"></script>
-<link rel="stylesheet" type="text/css" href="../jquery/smoothness/jquery-ui-1.10.4.custom.min.css">
+<link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
 <link rel="stylesheet" type="text/css" href="../style.css">
 </head>
 <body>
