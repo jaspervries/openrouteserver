@@ -33,9 +33,12 @@ while(TRUE) {
 	$time_mainloop_start = time();
 	
 	include('getdata.inc.php');
-	include('calculateroutes.inc.php');
-	include('publishresults.inc.php');
-	include('cleanhistory.inc.php');
+	if ($oldpublicationtime != $publicationtime) {
+		//further process only if new data
+		include('calculateroutes.inc.php');
+		include('publishresults.inc.php');
+		include('cleanhistory.inc.php');
+	}
 	
 	//calculate sleep
 	//new pull 58 seconds after previous

@@ -41,16 +41,18 @@ if ($datex !== FALSE) {
 				$time_mainloop_start = $time_mainloop_start - 48;
 			}
 			//get measurement data
-			foreach ($datex->d2LogicalModel->payloadPublication->siteMeasurements as $siteMeasurement) {
-				if ($siteMeasurement->measuredValue->measuredValue->basicData->travelTime->duration > 0) {
-					$data[(string)$siteMeasurement->measurementSiteReference['id']]['val']  = (int)$siteMeasurement->measuredValue->measuredValue->basicData->travelTime->duration;
-					//$data[(string)$siteMeasurement->measurementSiteReference['id']]['sd']   = (float)$siteMeasurement->measuredValue->measuredValue->basicData->travelTime['standardDeviation'];
-					//$data[(string)$siteMeasurement->measurementSiteReference['id']]['scdq'] = (int)$siteMeasurement->measuredValue->measuredValue->basicData->travelTime['supplierCalculatedDataQuality'];
-					if (!empty($siteMeasurement->measurementTimeDefault)) {
-						$data[(string)$siteMeasurement->measurementSiteReference['id']]['time'] = strtotime($siteMeasurement->measurementTimeDefault);
-					}
-					else {
-						$data[(string)$siteMeasurement->measurementSiteReference['id']]['time'] = $publicationtime;
+			else {
+				foreach ($datex->d2LogicalModel->payloadPublication->siteMeasurements as $siteMeasurement) {
+					if ($siteMeasurement->measuredValue->measuredValue->basicData->travelTime->duration > 0) {
+						$data[(string)$siteMeasurement->measurementSiteReference['id']]['val']  = (int)$siteMeasurement->measuredValue->measuredValue->basicData->travelTime->duration;
+						//$data[(string)$siteMeasurement->measurementSiteReference['id']]['sd']   = (float)$siteMeasurement->measuredValue->measuredValue->basicData->travelTime['standardDeviation'];
+						//$data[(string)$siteMeasurement->measurementSiteReference['id']]['scdq'] = (int)$siteMeasurement->measuredValue->measuredValue->basicData->travelTime['supplierCalculatedDataQuality'];
+						if (!empty($siteMeasurement->measurementTimeDefault)) {
+							$data[(string)$siteMeasurement->measurementSiteReference['id']]['time'] = strtotime($siteMeasurement->measurementTimeDefault);
+						}
+						else {
+							$data[(string)$siteMeasurement->measurementSiteReference['id']]['time'] = $publicationtime;
+						}
 					}
 				}
 			}
