@@ -95,10 +95,9 @@ if (mysqli_num_rows($res_routes)) {
 				//store result
 				$qry_update = "INSERT IGNORE INTO `route_history` SET `route_id` = '".$row_routes[0]."', `time` = '".$publicationtime."', `value` = '".$route_traveltime."', `filtered` = '".$route_filtered."', `level_of_service` = '".$level_of_service."'";
 				mysqli_query($db['link'], $qry_update);
-				echo mysqli_error($db['link']);
 				//cache result for datex feed
-				$datexfeed[] = array('id' => $row_routes[0], 'duration' => $route_traveltime);
-				$datexfeed[] = array('id' => $row_routes[0].'_s', 'duration' => $route_filtered);
+				$datexfeed[] = array('id' => $cfg_site_prefix.$row_routes[0], 'duration' => $route_traveltime);
+				$datexfeed[] = array('id' => $cfg_site_prefix.$row_routes[0].'_s', 'duration' => $route_filtered);
 			}
 		}
 	}

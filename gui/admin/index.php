@@ -46,7 +46,7 @@ if (mysqli_num_rows($res_routes)) {
 		echo '<td>';
 		echo '<a href="editroute.php?routeid='.$row_routes[0].'" title="route bewerken">[E]</a> <a href="editroute.php?routeid='.$row_routes[0].'&amp;action=copy" title="route kopieren">[C]</a> <a href="deleteroute.php?routeid='.$row_routes[0].'" title="route verwijderen">[X]</a>';
 		echo '</td><td>';
-		echo 'TDS01_ORS'.$row_routes[0];
+		echo $cfg_site_prefix.$row_routes[0];
 		echo '</td><td>';
 		echo htmlspecialchars($row_routes[1]);
 		echo '</td>';

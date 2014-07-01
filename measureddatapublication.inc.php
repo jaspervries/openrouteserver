@@ -1,5 +1,6 @@
 <?php
 if (!function_exists(createMeasuredDataPublication)) { function createMeasuredDataPublication($datexfeed) {
+	global $cfg_supplier_prefix;
 	//set constant publicationTime for all values
 	$publicationTime = date('c');
 	//generic header
@@ -16,7 +17,7 @@ if (!function_exists(createMeasuredDataPublication)) { function createMeasuredDa
 		$exchange->addAttribute('xmlns', 'http://datex2.eu/schema/2/2_0');
 	$supplierIdentification = $exchange->addChild('supplierIdentification');
 		$supplierIdentification->addChild('country', 'nl');
-		$supplierIdentification->addChild('nationalIdentifier', 'X-TDS');
+		$supplierIdentification->addChild('nationalIdentifier', $cfg_supplier_prefix);
 	$payloadPublication = $d2LogicalModel->addChild('payloadPuplication');
 		$payloadPublication->addAttribute('xmlns', 'http://datex2.eu/schema/2/2_0');
 		$payloadPublication->addAttribute('lang', 'nl');
@@ -24,9 +25,9 @@ if (!function_exists(createMeasuredDataPublication)) { function createMeasuredDa
 		$payloadPublication->addChild('publicationTime', $publicationTime);
 	$publicationCreator = $payloadPublication->addChild('publicationCreator');
 		$publicationCreator->addChild('country', 'nl');
-		$publicationCreator->addChild('nationalIdentifier', 'X-TDS');
+		$publicationCreator->addChild('nationalIdentifier', $cfg_supplier_prefix);
 	$measurementSiteTableReference = $payloadPublication->addChild('measurementSiteTableReference');
-		$measurementSiteTableReference->addAttribute('id', 'X-TDS_MST');
+		$measurementSiteTableReference->addAttribute('id', $cfg_supplier_prefix.'_MST');
 		$measurementSiteTableReference->addAttribute('version', '1');
 		$measurementSiteTableReference->addAttribute('targetClass', 'MeasurementSiteTable');
 	$headerInformation = $payloadPublication->addChild('headerInformation');

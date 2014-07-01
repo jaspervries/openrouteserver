@@ -29,7 +29,7 @@ if (mysqli_num_rows($res)) {
 	$row = mysqli_fetch_row($res);
 	
 	$data['route_id'] = $row[0];
-	$data['name'] = $row[1].' (TDS01_ORS'.$row[0].')';
+	$data['name'] = $row[1].' ('.$cfg_site_prefix.$row[0].')';
 	
 	$qry = "SELECT `time`, `value`, `filtered`, `level_of_service` FROM `route_history` WHERE `route_id` = '".$row[0]."' ORDER BY `time` ASC";
 	$res = mysqli_query($db['link'], $qry);

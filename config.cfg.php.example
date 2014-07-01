@@ -31,4 +31,7 @@ $cfg_data['traveltime_url'] = 'http://127.0.0.1/traveltime.gz';
 $cfg_data['mst_url'] = 'http://127.0.0.1/mst.gz';
 //set to TRUE if script must unpack gzipped data
 $cfg_data['gz'] = FALSE;
+//supplier identification
+$cfg_supplier_prefix = 'X-example';
+$cfg_site_prefix = 'X-example_ORS';
 ?>

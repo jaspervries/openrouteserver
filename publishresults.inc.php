@@ -39,7 +39,7 @@ if (mysqli_num_rows($res_routes)) {
 	while ($row_routes = mysqli_fetch_row($res_routes)) {
 		$html.= '<tr>
 		<td>
-		<a onclick="showChart('.$row_routes[0].')" title="TDS01_ORS'.$row_routes[0].'">
+		<a onclick="showChart('.$row_routes[0].')" title="'.$cfg_site_prefix.$row_routes[0].'">
 		'.htmlspecialchars($row_routes[4]).'
 		</a>';
 		if ($row_routes[1] > (time() - 60*5)) {
