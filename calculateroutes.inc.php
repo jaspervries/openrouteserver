@@ -26,6 +26,7 @@ write_log('calculate routes', $publicationtime);
 $qry_routes = "SELECT `route_id`, `multiply`, `add` FROM `routes` WHERE `disabled` = 0";
 $res_routes = mysqli_query($db['link'], $qry_routes);
 if (mysqli_num_rows($res_routes)) {
+	$datexfeed = array();
 	while ($row_routes = mysqli_fetch_row($res_routes)) {
 		//initialize variables
 		$route_traveltime = 0;
@@ -94,8 +95,18 @@ if (mysqli_num_rows($res_routes)) {
 				//store result
 				$qry_update = "INSERT IGNORE INTO `route_history` SET `route_id` = '".$row_routes[0]."', `time` = '".$publicationtime."', `value` = '".$route_traveltime."', `filtered` = '".$route_filtered."', `level_of_service` = '".$level_of_service."'";
 				mysqli_query($db['link'], $qry_update);
+				echo mysqli_error($db['link']);
+				//cache result for datex feed
+				$datexfeed[] = array('id' => $row_routes[0], 'duration' => $route_traveltime);
+				$datexfeed[] = array('id' => $row_routes[0].'_s', 'duration' => $route_filtered);
 			}
 		}
 	}
+	//publish DATEX-II
+	include_once('measureddatapublication.inc.php');
+	$datex = createMeasuredDataPublication($datexfeed);
+	$hdl = fopen('gui/datex/measureddatapublication', 'w');
+	fwrite($hdl, $datex);
+	fclose($hdl);
 }
 ?>

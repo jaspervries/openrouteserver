@@ -1,2 +1,5 @@
 config.cfg.php$
 log.txt$
+gui/routes.html$
+gui/lastupdate.html$
+gui/datex/measureddatapublication$
