@@ -1,7 +1,7 @@
 <?php
 /*
 *    openrouteserver - Open source NDW route configurator en server
-*    Copyright (C) 2014 Jasper Vries
+*    Copyright (C) 2014 Jasper Vries; Gemeente Den Haag
 *
 *    This program is free software; you can redistribute it and/or modify
 *    it under the terms of the GNU General Public License as published by
@@ -18,33 +18,19 @@
 *    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-set_time_limit(0);
+/*
+ * REGISTRY DEFAULTS
+*/
 
-//connect database
-include('config.cfg.php');
-$db['link'] = mysqli_connect($cfg_db['host'], $cfg_db['user'], $cfg_db['pass'], $cfg_db['db']);
+$reg['ema_alpha'] = 0.75;
 
-//include log function
-include('log.inc.php');
-include('segmentclasses.cfg.php');
+/*
+ * OVERLOAD WITH DATABASE VALUES
+*/
 
-while(TRUE) {
-	//set start time of loop, to calculate sleep later
-	$time_mainloop_start = time();
-	
-	include('readregistry.inc.php');
-	include('getdata.inc.php');
-	if ($oldpublicationtime != $publicationtime) {
-		//further process only if new data
-		include('calculateroutes.inc.php');
-		include('publishresults.inc.php');
-		include('cleanhistory.inc.php');
-	}
-	
-	//calculate sleep
-	//new pull 58 seconds after previous
-	$sleep = max(0, ($time_mainloop_start + 58 - time()));
-	write_log('sleep: '.$sleep);
-	sleep($sleep);
+$qry = "SELECT `key`, `value` FROM `registry`";
+$res = mysqli_query($db['link'], $qry);
+while ($row = mysqli_fetch_row($res)) {
+	$reg[$row[0]] = $row[1];
 }
 ?>

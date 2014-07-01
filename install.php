@@ -92,4 +92,16 @@ if (mysqli_query($db['link'], $qry)) echo '<p>table `route_mapping` created</p>'
 else echo '<p>did not create table `route_mapping`</p>';
 echo mysqli_error($db['link']);
 
+$qry = "CREATE TABLE `registry`
+(
+	`key` VARCHAR(64) NOT NULL PRIMARY KEY,
+	`value` TEXT NULL
+)
+ENGINE `MyISAM`,
+CHARACTER SET 'latin1', 
+COLLATE 'latin1_general_ci'";
+if (mysqli_query($db['link'], $qry)) echo '<p>table `registry` created</p>';
+else echo '<p>did not create table `registry`</p>';
+echo mysqli_error($db['link']);
+
 ?>

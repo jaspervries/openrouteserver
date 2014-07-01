@@ -73,8 +73,7 @@ if (mysqli_num_rows($res_routes)) {
 					//determine if within margin of 5 minutes
 					$row_filtered = mysqli_fetch_row($res_filtered);
 					if (($row_filtered[0] >= ($publicationtime - (5*60))) && ($row_filtered[1] > 0)) {
-						$ema_alpha = 0.75;
-						$route_filtered = round($route_traveltime * $ema_alpha + $row_filtered[1] * (1 - $ema_alpha));
+						$route_filtered = round($route_traveltime * $reg['ema_alpha'] + $row_filtered[1] * (1 - $reg['ema_alpha']));
 					}
 				}
 				//otherwise store current value as filtered value
