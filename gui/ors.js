@@ -27,7 +27,7 @@ function drawChart(data) {
 		chartArea: {height:'75%', width:'80%'},
         legend: {'position': 'bottom'},
 		series: {
-			1: {
+			2: {
 				targetAxisIndex: 1,
 				lineWidth: 1
 			}
@@ -60,10 +60,11 @@ function showChart(id) {
 		var dataTable = new google.visualization.DataTable();
 		dataTable.addColumn('datetime', 'tijdstip');
 		dataTable.addColumn('number', 'reistijd');
+		dataTable.addColumn('number', 'gefilterde reistijd');
 		dataTable.addColumn('number', 'level of service');
 		
 		$.each(data.values, function(index, value) {
-			dataTable.addRow([new Date(value[0], value[1], value[2], value[3], value[4], value[5]), {v: value[6], f: String(value[7])}, parseInt(value[8])]);
+			dataTable.addRow([new Date(value[0], value[1], value[2], value[3], value[4], value[5]), {v: value[6], f: String(value[7])}, {v: value[8], f: String(value[9])}, parseInt(value[10])]);
 		});
 		
 		drawChart(dataTable);

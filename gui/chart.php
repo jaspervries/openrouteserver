@@ -31,12 +31,12 @@ if (mysqli_num_rows($res)) {
 	$data['route_id'] = $row[0];
 	$data['name'] = $row[1].' (TDS01_ORS'.$row[0].')';
 	
-	$qry = "SELECT `time`, `value`, `level_of_service` FROM `route_history` WHERE `route_id` = '".$row[0]."' ORDER BY `time` ASC";
+	$qry = "SELECT `time`, `value`, `filtered`, `level_of_service` FROM `route_history` WHERE `route_id` = '".$row[0]."' ORDER BY `time` ASC";
 	$res = mysqli_query($db['link'], $qry);
 	if (mysqli_num_rows($res)) {
 		while ($row = mysqli_fetch_row($res)) {
 			//months are 0-based in Google Charts
-			$data['values'][] = array(date('Y',$row[0]), date('m',$row[0])-1, date('d',$row[0]), date('H',$row[0]), date('i',$row[0]), date('s',$row[0]), round($row[1]/60,1), floor($row[1]/60).':'.str_pad($row[1]%60, 2, '0', STR_PAD_LEFT), $row[2]);
+			$data['values'][] = array(date('Y',$row[0]), date('m',$row[0])-1, date('d',$row[0]), date('H',$row[0]), date('i',$row[0]), date('s',$row[0]), round($row[1]/60,1), floor($row[1]/60).':'.str_pad($row[1]%60, 2, '0', STR_PAD_LEFT), round($row[2]/60,1), floor($row[2]/60).':'.str_pad($row[2]%60, 2, '0', STR_PAD_LEFT), $row[3]);
 		}
 	}
 }

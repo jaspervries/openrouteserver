@@ -1,7 +1,7 @@
 <?php
 /*
 *    openrouteserver - Open source NDW route configurator en server
-*    Copyright (C) 2014 Jasper Vries
+*    Copyright (C) 2014 Jasper Vries; Gemeente Den Haag
 *
 *    This program is free software; you can redistribute it and/or modify
 *    it under the terms of the GNU General Public License as published by
@@ -61,7 +61,26 @@ if (mysqli_num_rows($res_routes)) {
 				//apply route level adjustment
 				$route_traveltime = round( $route_traveltime * $row_routes[1] + $row_routes[2] * 60 );
 //				write_log($row_routes[0].' route time: '.$route_traveltime);
-				//compensate missing segments and determine level of service
+				/*
+				 * calculate filtered data
+				*/
+				$route_filtered = 0;
+				//get previous filtered value
+				$qry_filtered = "SELECT `time`, `filtered` FROM `route_history` WHERE `route_id` = '".$row_routes[0]."' ORDER BY `time` DESC LIMIT 1";
+				$res_filtered = mysqli_query($db['link'], $qry_filtered);
+				if (mysqli_num_rows($res_filtered)) {
+					//determine if within margin of 5 minutes
+					$row_filtered = mysqli_fetch_row($res_filtered);
+					if (($row_filtered[0] >= ($publicationtime - (5*60))) && ($row_filtered[1] > 0)) {
+						$ema_alpha = 0.75;
+						$route_filtered = round($route_traveltime * $ema_alpha + $row_filtered[1] * (1 - $ema_alpha));
+					}
+				}
+				//otherwise store current value as filtered value
+				if ($route_filtered == 0) {
+					$route_filtered = $route_traveltime;
+				}
+				//determine level of service
 				$level_of_service = 0;
 				for ($class_id = 1; $class_id < count($cfg_class_colour); $class_id++) {
 					$allowable_traveltime_byclass[$class_id] = round( $allowable_traveltime_byclass[$class_id] * $segments_total / $segments_available );
@@ -73,7 +92,7 @@ if (mysqli_num_rows($res_routes)) {
 				}
 //				write_log('los: '.$level_of_service);
 				//store result
-				$qry_update = "INSERT IGNORE INTO `route_history` SET `route_id` = '".$row_routes[0]."', `time` = '".$publicationtime."', `value` = '".$route_traveltime."', `level_of_service` = '".$level_of_service."'";
+				$qry_update = "INSERT IGNORE INTO `route_history` SET `route_id` = '".$row_routes[0]."', `time` = '".$publicationtime."', `value` = '".$route_traveltime."', `filtered` = '".$route_filtered."', `level_of_service` = '".$level_of_service."'";
 				mysqli_query($db['link'], $qry_update);
 			}
 		}
