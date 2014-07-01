@@ -19,6 +19,7 @@
 */
 
 set_time_limit(0);
+chdir(dirname(__FILE__)); //chdir to script dir
 
 //connect database
 include('config.cfg.php');
