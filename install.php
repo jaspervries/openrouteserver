@@ -25,8 +25,8 @@ $db['link'] = mysqli_connect($cfg_db['host'], $cfg_db['user'], $cfg_db['pass']);
 
 $qry = "CREATE DATABASE `".$cfg_db['db']."`
 COLLATE 'latin1_general_ci'";
-if (mysqli_query($db['link'], $qry)) echo '<p>database created</p>';
-else echo '<p>did not create database</p>';
+if (mysqli_query($db['link'], $qry)) echo "\r\ndatabase created";
+else echo "\r\ndid not create database";
 
 $db['link'] = mysqli_connect($cfg_db['host'], $cfg_db['user'], $cfg_db['pass'], $cfg_db['db']);
 
@@ -42,8 +42,8 @@ $qry = "CREATE TABLE `route_history`
 ENGINE `MyISAM`,
 CHARACTER SET 'latin1', 
 COLLATE 'latin1_general_ci'";
-if (mysqli_query($db['link'], $qry)) echo '<p>table `route_history` created</p>';
-else echo '<p>did not create table `route_history`</p>';
+if (mysqli_query($db['link'], $qry)) echo "\r\ntable `route_history` created ";
+else echo "\r\ndid not create table `route_history` ";
 echo mysqli_error($db['link']);
 
 $qry = "CREATE TABLE `segments`
@@ -57,8 +57,8 @@ $qry = "CREATE TABLE `segments`
 ENGINE `MyISAM`,
 CHARACTER SET 'latin1', 
 COLLATE 'latin1_general_ci'";
-if (mysqli_query($db['link'], $qry)) echo '<p>table `segments` created</p>';
-else echo '<p>did not create table `segments`</p>';
+if (mysqli_query($db['link'], $qry)) echo "\r\ntable `segments` created ";
+else echo "\r\ndid not create table `segments ";
 echo mysqli_error($db['link']);
 
 $qry = "CREATE TABLE `routes`
@@ -73,8 +73,8 @@ $qry = "CREATE TABLE `routes`
 ENGINE `MyISAM`,
 CHARACTER SET 'latin1', 
 COLLATE 'latin1_general_ci'";
-if (mysqli_query($db['link'], $qry)) echo '<p>table `routes` created</p>';
-else echo '<p>did not create table `routes`</p>';
+if (mysqli_query($db['link'], $qry)) echo "\r\ntable `routes` created ";
+else echo "\r\ndid not create table `routes` ";
 echo mysqli_error($db['link']);
 
 $qry = "CREATE TABLE `route_mapping`
@@ -88,8 +88,8 @@ $qry = "CREATE TABLE `route_mapping`
 ENGINE `MyISAM`,
 CHARACTER SET 'latin1', 
 COLLATE 'latin1_general_ci'";
-if (mysqli_query($db['link'], $qry)) echo '<p>table `route_mapping` created</p>';
-else echo '<p>did not create table `route_mapping`</p>';
+if (mysqli_query($db['link'], $qry)) echo "\r\ntable `route_mapping` created ";
+else echo "\r\ndid not create table `route_mapping` ";
 echo mysqli_error($db['link']);
 
 $qry = "CREATE TABLE `registry`
@@ -100,8 +100,8 @@ $qry = "CREATE TABLE `registry`
 ENGINE `MyISAM`,
 CHARACTER SET 'latin1', 
 COLLATE 'latin1_general_ci'";
-if (mysqli_query($db['link'], $qry)) echo '<p>table `registry` created</p>';
-else echo '<p>did not create table `registry`</p>';
+if (mysqli_query($db['link'], $qry)) echo "\r\ntable `registry` created ";
+else echo "\r\ndid not create table `registry` ";
 echo mysqli_error($db['link']);
 
 ?>

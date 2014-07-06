@@ -35,6 +35,7 @@ ini_set("memory_limit","1G");
 
 //get data
 write_log('update MST');
+echo "\r\nStart update MST";
 $datex = @file_get_contents($cfg_data['mst_url']);
 if ($cfg_data['gz'] == TRUE) $datex = gzdecode($datex);
 //process XML
@@ -99,10 +100,13 @@ if ($datex !== FALSE) {
 		}
 	}
 	catch (Exception $e) {
+		echo "\r\nXML exception: ".$e;
 		write_log('XML exception: '.$e);
 	}
 }
 else {
 	write_log('no data');
+	echo "\r\nNo data";
 }
+echo "\r\nComplete";
 ?>
