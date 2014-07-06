@@ -63,22 +63,22 @@ if (mysqli_num_rows($res_routes)) {
 				$route_traveltime = round( $route_traveltime * $row_routes[1] + $row_routes[2] * 60 );
 //				write_log($row_routes[0].' route time: '.$route_traveltime);
 				/*
-				 * calculate filtered data
+				 * calculate smoothed data
 				*/
-				$route_filtered = 0;
-				//get previous filtered value
-				$qry_filtered = "SELECT `time`, `filtered` FROM `route_history` WHERE `route_id` = '".$row_routes[0]."' ORDER BY `time` DESC LIMIT 1";
-				$res_filtered = mysqli_query($db['link'], $qry_filtered);
-				if (mysqli_num_rows($res_filtered)) {
+				$route_smoothed = 0;
+				//get previous smoothed value
+				$qry_smoothed = "SELECT `time`, `smoothed` FROM `route_history` WHERE `route_id` = '".$row_routes[0]."' ORDER BY `time` DESC LIMIT 1";
+				$res_smoothed = mysqli_query($db['link'], $qry_smoothed);
+				if (mysqli_num_rows($res_smoothed)) {
 					//determine if within margin of 5 minutes
-					$row_filtered = mysqli_fetch_row($res_filtered);
-					if (($row_filtered[0] >= ($publicationtime - (5*60))) && ($row_filtered[1] > 0)) {
-						$route_filtered = round($route_traveltime * $reg['ema_alpha'] + $row_filtered[1] * (1 - $reg['ema_alpha']));
+					$row_smoothed = mysqli_fetch_row($res_smoothed);
+					if (($row_smoothed[0] >= ($publicationtime - (5*60))) && ($row_smoothed[1] > 0)) {
+						$route_smoothed = round($route_traveltime * $reg['ema_alpha'] + $row_smoothed[1] * (1 - $reg['ema_alpha']));
 					}
 				}
-				//otherwise store current value as filtered value
-				if ($route_filtered == 0) {
-					$route_filtered = $route_traveltime;
+				//otherwise store current value as smoothed value
+				if ($route_smoothed == 0) {
+					$route_smoothed = $route_traveltime;
 				}
 				//determine level of service
 				$level_of_service = 0;
@@ -92,11 +92,11 @@ if (mysqli_num_rows($res_routes)) {
 				}
 //				write_log('los: '.$level_of_service);
 				//store result
-				$qry_update = "INSERT IGNORE INTO `route_history` SET `route_id` = '".$row_routes[0]."', `time` = '".$publicationtime."', `value` = '".$route_traveltime."', `filtered` = '".$route_filtered."', `level_of_service` = '".$level_of_service."'";
+				$qry_update = "INSERT IGNORE INTO `route_history` SET `route_id` = '".$row_routes[0]."', `time` = '".$publicationtime."', `value` = '".$route_traveltime."', `smoothed` = '".$route_smoothed."', `level_of_service` = '".$level_of_service."'";
 				mysqli_query($db['link'], $qry_update);
 				//cache result for datex feed
 				$datexfeed[] = array('id' => $cfg_site_prefix.$row_routes[0], 'duration' => $route_traveltime);
-				$datexfeed[] = array('id' => $cfg_site_prefix.$row_routes[0].'_s', 'duration' => $route_filtered);
+				$datexfeed[] = array('id' => $cfg_site_prefix.$row_routes[0].'_s', 'duration' => $route_smoothed);
 			}
 		}
 	}

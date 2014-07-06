@@ -35,7 +35,7 @@ $qry = "CREATE TABLE `route_history`
 	`route_id` INT UNSIGNED NOT NULL,
 	`time` INT UNSIGNED NOT NULL,
 	`value`  INT UNSIGNED NOT NULL,
-	`filtered`  INT UNSIGNED NOT NULL DEFAULT 0,
+	`smoothed`  INT UNSIGNED NOT NULL DEFAULT 0,
 	`level_of_service` TINYINT UNSIGNED NOT NULL DEFAULT 0,
 	CONSTRAINT `history` PRIMARY KEY (`route_id`, `time`)
 )

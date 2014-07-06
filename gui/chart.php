@@ -31,7 +31,7 @@ if (mysqli_num_rows($res)) {
 	$data['route_id'] = $row[0];
 	$data['name'] = $row[1].' ('.$cfg_site_prefix.$row[0].')';
 	
-	$qry = "SELECT `time`, `value`, `filtered`, `level_of_service` FROM `route_history` WHERE `route_id` = '".$row[0]."' ORDER BY `time` ASC";
+	$qry = "SELECT `time`, `value`, `smoothed`, `level_of_service` FROM `route_history` WHERE `route_id` = '".$row[0]."' ORDER BY `time` ASC";
 	$res = mysqli_query($db['link'], $qry);
 	if (mysqli_num_rows($res)) {
 		while ($row = mysqli_fetch_row($res)) {
