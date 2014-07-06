@@ -103,7 +103,8 @@ if (mysqli_num_rows($res_routes)) {
 	//publish DATEX-II
 	include_once('measureddatapublication.inc.php');
 	$datex = createMeasuredDataPublication($datexfeed);
-	$hdl = fopen('gui/datex/measureddatapublication', 'w');
+	$datex = gzencode($datex);
+	$hdl = fopen('gui/datex/measureddatapublication.gz', 'w');
 	fwrite($hdl, $datex);
 	fclose($hdl);
 }
