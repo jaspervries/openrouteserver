@@ -85,7 +85,7 @@ if (mysqli_num_rows($res_routes)) {
 				for ($class_id = 1; $class_id < count($cfg_class_colour); $class_id++) {
 					$allowable_traveltime_byclass[$class_id] = round( $allowable_traveltime_byclass[$class_id] * $segments_total / $segments_available );
 //					write_log($class_id.' class time: '.$allowable_traveltime_byclass[$class_id]);
-					if ($route_traveltime <= $allowable_traveltime_byclass[$class_id]) {
+					if ($route_smoothed <= $allowable_traveltime_byclass[$class_id]) {
 						$level_of_service = $class_id;
 					}
 					else break;
