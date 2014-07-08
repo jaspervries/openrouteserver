@@ -69,7 +69,7 @@ if (!function_exists(createMeasuredDataPublication)) { function createMeasuredDa
 			$basicData->addChild('travelTimeType', 'best');
 		$travelTime = $basicData->addChild('travelTime');
 			$travelTime->addAttribute('xsi_type', 'DurationValue');
-			if (!empty($row['quality'])) $travelTime->addAttribute('supplierCalculatedDataQuality', $row['quality']); //quality
+			if (isset($row['quality']) && ($row['quality'] < 100)) $travelTime->addAttribute('supplierCalculatedDataQuality', $row['quality']); //quality
 			$travelTime->addChild('duration', $row['duration']); //duration
 	}
 	//format XML
