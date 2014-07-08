@@ -55,49 +55,76 @@ if (mysqli_num_rows($res_routes)) {
 //					write_log($row_segments[0].': '.$data[$row_segments[0]]['val'], $data[$row_segments[0]]['time']);
 				}
 			}
-			//only store result if at least 75% of segments (by length) are available
+			/*
+			 * calculate instantaneous travel time
+			*/
+			//only allow result if at least 75% of segments (by length) are available
 			if ((($segments_total - $segments_available) / $segments_total) <= 0.25) {
 				//compensate missing segments
 				$route_traveltime = ( $route_traveltime * $segments_total / $segments_available );
 				//apply route level adjustment
 				$route_traveltime = round( $route_traveltime * $row_routes[1] + $row_routes[2] * 60 );
 //				write_log($row_routes[0].' route time: '.$route_traveltime);
-				/*
-				 * calculate smoothed data
-				*/
-				$route_smoothed = 0;
-				//get previous smoothed value
-				$qry_smoothed = "SELECT `time`, `smoothed` FROM `route_history` WHERE `route_id` = '".$row_routes[0]."' ORDER BY `time` DESC LIMIT 1";
-				$res_smoothed = mysqli_query($db['link'], $qry_smoothed);
-				if (mysqli_num_rows($res_smoothed)) {
-					//determine if within margin of 5 minutes
-					$row_smoothed = mysqli_fetch_row($res_smoothed);
-					if (($row_smoothed[0] >= ($publicationtime - (5*60))) && ($row_smoothed[1] > 0)) {
-						$route_smoothed = round($route_traveltime * $reg['ema_alpha'] + $row_smoothed[1] * (1 - $reg['ema_alpha']));
-					}
-				}
-				//otherwise store current value as smoothed value
-				if ($route_smoothed == 0) {
-					$route_smoothed = $route_traveltime;
-				}
-				//determine level of service
-				$level_of_service = 0;
-				for ($class_id = 1; $class_id < count($cfg_class_colour); $class_id++) {
-					$allowable_traveltime_byclass[$class_id] = round( $allowable_traveltime_byclass[$class_id] * $segments_total / $segments_available );
-//					write_log($class_id.' class time: '.$allowable_traveltime_byclass[$class_id]);
-					if ($route_smoothed <= $allowable_traveltime_byclass[$class_id]) {
-						$level_of_service = $class_id;
-					}
-					else break;
-				}
-//				write_log('los: '.$level_of_service);
-				//store result
-				$qry_update = "INSERT IGNORE INTO `route_history` SET `route_id` = '".$row_routes[0]."', `time` = '".$publicationtime."', `value` = '".$route_traveltime."', `smoothed` = '".$route_smoothed."', `level_of_service` = '".$level_of_service."'";
-				mysqli_query($db['link'], $qry_update);
-				//cache result for datex feed
-				$datexfeed[] = array('id' => $cfg_site_prefix.$row_routes[0], 'duration' => $route_traveltime);
-				$datexfeed[] = array('id' => $cfg_site_prefix.$row_routes[0].'_s', 'duration' => $route_smoothed);
 			}
+			else {
+				$route_traveltime = -1;
+			}
+			/*
+			 * calculate smoothed travel time
+			*/
+			//get previous smoothed value
+			$qry_smoothed = "SELECT `time`, `smoothed`, `quality` FROM `route_history` WHERE `route_id` = '".$row_routes[0]."' ORDER BY `time` DESC LIMIT 1";
+			$res_smoothed = mysqli_query($db['link'], $qry_smoothed);
+			if (mysqli_num_rows($res_smoothed)) {
+				$row_smoothed = mysqli_fetch_row($res_smoothed);
+				$route_smoothed_quality = $row_smoothed[2];
+				//determine if within margin of 5 minutes if no current value
+				if ($route_traveltime == -1) {
+					$route_smoothed_quality = max(($route_smoothed_quality - (20 * (($publicationtime - $row_smoothed[0]) / 60))), 0);
+					if ($route_smoothed_quality > 0) {
+						$route_smoothed = $row_smoothed[1]; //new value is old value
+					}
+					else {
+						$route_smoothed = -1;
+					}
+				}
+				elseif ($route_smoothed_quality > 0) {
+					$ema_alpha = (1 - $reg['ema_alpha']) * ($route_smoothed_quality / 100); //input: weight of new value, output: weight of old value
+					$route_smoothed = round($route_traveltime * (1 - $ema_alpha) + $row_smoothed[1] * $ema_alpha);
+					$route_smoothed_quality = min(($route_smoothed_quality + 20), 100);
+				}
+				else {
+					//otherwise store current value as smoothed value
+					$route_smoothed = $route_traveltime;
+					$route_smoothed_quality = 100;
+				}
+			}
+			else {
+				//otherwise store current value as smoothed value
+				$route_smoothed = $route_traveltime;
+				$route_smoothed_quality = 100;
+			}
+			/*
+			 * determine level of service
+			*/
+			$level_of_service = 0;
+			for ($class_id = 1; $class_id < count($cfg_class_colour); $class_id++) {
+				$allowable_traveltime_byclass[$class_id] = round( $allowable_traveltime_byclass[$class_id] * $segments_total / $segments_available );
+//				write_log($class_id.' class time: '.$allowable_traveltime_byclass[$class_id]);
+				if ($route_smoothed <= $allowable_traveltime_byclass[$class_id]) {
+					$level_of_service = $class_id;
+				}
+				else break;
+			}
+//			write_log('los: '.$level_of_service);
+			/*
+			 * store result
+			*/
+			$qry_update = "INSERT IGNORE INTO `route_history` SET `route_id` = '".$row_routes[0]."', `time` = '".$publicationtime."', `value` = '".$route_traveltime."', `smoothed` = '".$route_smoothed."', `quality` = '".$route_smoothed_quality."', `level_of_service` = '".$level_of_service."'";
+			mysqli_query($db['link'], $qry_update);
+			//cache result for datex feed
+			$datexfeed[] = array('id' => $cfg_site_prefix.$row_routes[0], 'duration' => $route_traveltime);
+			$datexfeed[] = array('id' => $cfg_site_prefix.$row_routes[0].'_s', 'duration' => $route_smoothed, 'quality' => $route_smoothed_quality);
 		}
 	}
 	//publish DATEX-II
