@@ -21,7 +21,7 @@
 write_log('publish results', $publicationtime);
 
 //publish results as HTML table
-$qry_routes = "SELECT `route_history`.`route_id`, `route_history`.`time`, `route_history`.`value`, `route_history`.`level_of_service`, `routes`.`name`, `route_history`.`smoothed` FROM `route_history`
+$qry_routes = "SELECT `route_history`.`route_id`, `route_history`.`time`, `route_history`.`value`, `route_history`.`level_of_service`, `routes`.`name`, `route_history`.`smoothed`, `route_history`.`quality` FROM `route_history`
 INNER JOIN (SELECT `route_id`, MAX(`time`) AS `mtime` FROM `route_history`
 	GROUP BY (`route_id`)) AS `t1`
 	ON `t1`.`route_id` = `route_history`.`route_id` AND `t1`.`mtime` = `route_history`.`time`
@@ -44,23 +44,27 @@ if (mysqli_num_rows($res_routes)) {
 		<a onclick="showChart('.$row_routes[0].')" title="'.$cfg_site_prefix.$row_routes[0].'">
 		'.htmlspecialchars($row_routes[4]).'
 		</a></td>';
-		if ($row_routes[1] > (time() - 60*5)) {
-			$html.= '<td style="color:'.$cfg_class_colour[$row_routes[3]].';background-color:#333;">';
+		//instantaneous travel time
+		if ($row_routes[2] == -1) {
+			$html.= '<td style="color:#FFF;background-color:#999;">-1</td>';
 		}
 		else {
-			$html.= '<td style="color:'.$cfg_class_colour[$row_routes[3]].';background-color:#999;">';
-		}
-		$html.= floor($row_routes[2]/60).':'.str_pad($row_routes[2]%60, 2, '0', STR_PAD_LEFT).'
-		</td>';
-		if ($row_routes[1] > (time() - 60*5)) {
 			$html.= '<td style="color:'.$cfg_class_colour[$row_routes[3]].';background-color:#333;">';
+			$html.= floor($row_routes[2]/60).':'.str_pad($row_routes[2]%60, 2, '0', STR_PAD_LEFT).'</td>';
+		}
+		//smoothed travel time
+		if ($row_routes[5] == -1) {
+			$html.= '<td style="color:#FFF;background-color:#999;">-1</td>';
+		}
+		elseif ($row_routes[6] < 100) {
+			$html.= '<td style="color:'.$cfg_class_colour[$row_routes[3]].';background-color:#999;">';
+			$html.= floor($row_routes[5]/60).':'.str_pad($row_routes[5]%60, 2, '0', STR_PAD_LEFT).'</td>';
 		}
 		else {
-			$html.= '<td style="color:'.$cfg_class_colour[$row_routes[3]].';background-color:#999;">';
+			$html.= '<td style="color:'.$cfg_class_colour[$row_routes[3]].';background-color:#333;">';
+			$html.= floor($row_routes[5]/60).':'.str_pad($row_routes[5]%60, 2, '0', STR_PAD_LEFT).'</td>';
 		}
-		$html.= floor($row_routes[5]/60).':'.str_pad($row_routes[5]%60, 2, '0', STR_PAD_LEFT).'
-		</td>
-		</tr>';
+		$html.= '</tr>';
 	}
 	$html.= '</tbody>
     </table>';
