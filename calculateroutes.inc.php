@@ -73,7 +73,7 @@ if (mysqli_num_rows($res_routes)) {
 			 * calculate smoothed travel time
 			*/
 			//get previous smoothed value
-			$qry_smoothed = "SELECT `time`, `smoothed`, `quality` FROM `route_history` WHERE `route_id` = '".$row_routes[0]."' ORDER BY `time` DESC LIMIT 1";
+			$qry_smoothed = "SELECT `time`, `smoothed`, `quality`, `freeflow` FROM `route_history` WHERE `route_id` = '".$row_routes[0]."' ORDER BY `time` DESC LIMIT 1";
 			$res_smoothed = mysqli_query($db['link'], $qry_smoothed);
 			if (mysqli_num_rows($res_smoothed)) {
 				$row_smoothed = mysqli_fetch_row($res_smoothed);
@@ -105,6 +105,21 @@ if (mysqli_num_rows($res_routes)) {
 				$route_smoothed_quality = 100;
 			}
 			/*
+			 * determine freeflow value
+			*/
+			if ((date('G', $publicationtime) >= 22) || (date('G', $publicationtime) < 6)) {
+				//if in night
+				$route_freeflow = round($route_traveltime * ($reg['ema_alpha_freeflow']) + $row_smoothed[3] * (1 - $reg['ema_alpha_freeflow']));
+			}
+			elseif ($row_smoothed[3] == 0 ) {
+				//if no previous freeflow
+				$route_freeflow = $route_traveltime;
+			}
+			else {
+				//if not in night, keep existing freeflow
+				$route_freeflow = $row_smoothed[3];
+			}
+			/*
 			 * determine level of service
 			*/
 			$level_of_service = 0;
@@ -120,7 +135,7 @@ if (mysqli_num_rows($res_routes)) {
 			/*
 			 * store result
 			*/
-			$qry_update = "INSERT IGNORE INTO `route_history` SET `route_id` = '".$row_routes[0]."', `time` = '".$publicationtime."', `value` = '".$route_traveltime."', `smoothed` = '".$route_smoothed."', `quality` = '".$route_smoothed_quality."', `level_of_service` = '".$level_of_service."'";
+			$qry_update = "INSERT IGNORE INTO `route_history` SET `route_id` = '".$row_routes[0]."', `time` = '".$publicationtime."', `value` = '".$route_traveltime."', `smoothed` = '".$route_smoothed."', `quality` = '".$route_smoothed_quality."', `level_of_service` = '".$level_of_service."', `freeflow` = '".$route_freeflow."'";
 			mysqli_query($db['link'], $qry_update);
 			//cache result for datex feed
 			$datexfeed[] = array('id' => $cfg_site_prefix.$row_routes[0], 'duration' => $route_traveltime);

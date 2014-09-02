@@ -1,6 +1,6 @@
 /*
 *    openrouteserver - Open source NDW route configurator en server
-*    Copyright (C) 2014 Jasper Vries
+*    Copyright (C) 2014 Jasper Vries; Gemeente Den Haag
 *
 *    This program is free software; you can redistribute it and/or modify
 *    it under the terms of the GNU General Public License as published by
@@ -30,6 +30,10 @@ function drawChart(data) {
 			2: {
 				targetAxisIndex: 1,
 				lineWidth: 1
+			},
+			3: {
+				targetAxisIndex: 0,
+				lineWidth: 1
 			}
 		},
 		vAxes: [
@@ -51,7 +55,6 @@ function drawChart(data) {
 
 function showChart(id) {
 	$('#chartdialog').dialog('option', 'title', 'Laden...');
-	$('#chart_div').hide();
 	$('#chartdialog').dialog('open');
 	
 	$.getJSON('chart.php', { q: id } ).done(function( data ) {
@@ -62,13 +65,18 @@ function showChart(id) {
 		dataTable.addColumn('number', 'reistijd');
 		dataTable.addColumn('number', 'gefilterde reistijd');
 		dataTable.addColumn('number', 'level of service');
+		dataTable.addColumn('number', 'freeflow');
 		
 		$.each(data.values, function(index, value) {
-			dataTable.addRow([new Date(value[0], value[1], value[2], value[3], value[4], value[5]), {v: value[6], f: String(value[7])}, {v: value[8], f: String(value[9])}, parseInt(value[10])]);
+			dataTable.addRow([new Date(value[0], value[1], value[2], value[3], value[4], value[5]), 
+			{v: value[6], f: String(value[7])}, 
+			{v: value[8], f: String(value[9])}, 
+			parseInt(value[10]),
+			{v: value[11], f: String(value[12])}, 
+			]);
 		});
 		
 		drawChart(dataTable);
-		$('#chart_div').show();
 	});
 	
 }
