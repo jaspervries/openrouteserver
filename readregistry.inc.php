@@ -23,7 +23,7 @@
 */
 
 $reg['ema_alpha'] = 0.75;
-$reg['ema_alpha_freeflow'] = 0.05;
+$reg['ema_alpha_freeflow'] = 0.005;
 
 /*
  * OVERLOAD WITH DATABASE VALUES
