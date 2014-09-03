@@ -140,6 +140,7 @@ if (mysqli_num_rows($res_routes)) {
 			//cache result for datex feed
 			$datexfeed[] = array('id' => $cfg_site_prefix.$row_routes[0], 'duration' => $route_traveltime);
 			$datexfeed[] = array('id' => $cfg_site_prefix.$row_routes[0].'_s', 'duration' => $route_smoothed, 'quality' => $route_smoothed_quality);
+			$datexfeed[] = array('id' => $cfg_site_prefix.$row_routes[0].'_f', 'duration' => $route_freeflow);
 		}
 	}
 	//publish DATEX-II
