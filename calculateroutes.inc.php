@@ -107,7 +107,7 @@ if (mysqli_num_rows($res_routes)) {
 			/*
 			 * determine freeflow value
 			*/
-			if ((date('G', $publicationtime) >= 22) || (date('G', $publicationtime) < 6) && ($route_traveltime > 0)) {
+			if (((date('G', $publicationtime) >= 22) || (date('G', $publicationtime) < 6)) && ($route_traveltime > 0)) {
 				//if in night
 				$route_freeflow = round($route_traveltime * ($reg['ema_alpha_freeflow']) + $row_smoothed[3] * (1 - $reg['ema_alpha_freeflow']));
 			}
