@@ -150,5 +150,11 @@ if (mysqli_num_rows($res_routes)) {
 	$hdl = fopen('gui/datex/measureddatapublication.gz', 'w');
 	fwrite($hdl, $datex);
 	fclose($hdl);
+	//publish JSON
+	include_once('jsonpublication.inc.php');
+	$json = createJsonPublication($datexfeed);
+	$hdl = fopen('gui/datex/measureddatapublication.json', 'w');
+	fwrite($hdl, $json);
+	fclose($hdl);
 }
 ?>
