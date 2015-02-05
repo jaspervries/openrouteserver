@@ -26,9 +26,14 @@ if (!function_exists('createJsonPublication')) { function createJsonPublication(
 	'data' => array());
 	//for each route
 	foreach($datexfeed as $row) {
-		$json['data'][$row['id']]['duration'] = $row['duration']; //duration
 		if (isset($row['quality']) && ($row['quality'] < 100)) {
-			$json['data'][$row['id']]['quality'] = $row['quality']; //quality
+			$json['data'][] = array( 'id' => $row['id'], //id
+								'duration' => (int) $row['duration'], //duration
+								'quality' => (int) $row['quality']); //quality
+		}
+		else {
+			$json['data'][] = array( 'id' => $row['id'], //id
+								'duration' => (int) $row['duration']); //duration
 		}
 	}
 	$json = json_encode($json);
