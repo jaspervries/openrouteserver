@@ -1,7 +1,7 @@
 <?php
 /*
 *    openrouteserver - Open source NDW route configurator en server
-*    Copyright (C) 2014 Jasper Vries
+*    Copyright (C) 2014,2017 Jasper Vries
 *
 *    This program is free software; you can redistribute it and/or modify
 *    it under the terms of the GNU General Public License as published by
@@ -18,6 +18,20 @@
 *    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
+//level of service boundaries
+//LOS is applied if current/freeflow > value set below
+$cfg_LOS_boundary[0] = 0;
+$cfg_LOS_boundary[1] = 0.2;
+$cfg_LOS_boundary[2] = 0.45;
+$cfg_LOS_boundary[3] = 0.7;
+
+//colours for LOS
+$cfg_LOS_colour[0] = '#CC0000';
+$cfg_LOS_colour[1] = '#FF9900';
+$cfg_LOS_colour[2] = '#FFFF00';
+$cfg_LOS_colour[3] = '#33CC00';
+
+
 //LOS 0 must not be defined here
 $cfg_class['R'][1] = 30;
 $cfg_class['R'][2] = 60;
@@ -29,12 +43,13 @@ $cfg_class['G'][1] = 10;
 $cfg_class['G'][2] = 20;
 $cfg_class['G'][3] = 30;
 //colour for LOS 0 must be defined here
-$cfg_class_colour[0] = '#CC0000';
-$cfg_class_colour[1] = '#FF9900';
-$cfg_class_colour[2] = '#FFFF00';
-$cfg_class_colour[3] = '#33CC00';
+$cfg_class_colour[0] = $cfg_LOS_colour[0];
+$cfg_class_colour[1] = $cfg_LOS_colour[1];
+$cfg_class_colour[2] = $cfg_LOS_colour[2];
+$cfg_class_colour[3] = $cfg_LOS_colour[3];
 //automatically apply specific class when prefixed
 //unknown defaults to P class
 $cfg_class_G = array ('GEO01_SRE', 'GEO02_GDH', 'GEO02_KAN', 'GRT01', 'GUT01', 'SRR01');
 $cfg_class_R = array ('GEO01_R_RWS', 'GEO01_Z_RWS', 'GEO02_N_RWS', 'GEO02_R_RWS', 'GEO02_Z_RWS', 'RWS01', 'GEO03_D4T-RWS');
+
 ?>

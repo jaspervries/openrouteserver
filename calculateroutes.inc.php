@@ -32,9 +32,6 @@ if (mysqli_num_rows($res_routes)) {
 		$route_traveltime = 0;
 		$segments_available = 0;
 		$segments_total = 0;
-		foreach ($cfg_class_colour as $class_id => $colour) {
-			$allowable_traveltime_byclass[$class_id] = 0;
-		}
 		//get segments
 		$qry_segments = "SELECT `route_mapping`.`segment_id`, `route_mapping`.`multiply`, `route_mapping`.`add`, `segments`.`length`, `segments`.`class` FROM `route_mapping` LEFT JOIN `segments` ON `route_mapping`.`segment_id` = `segments`.`segment_id` WHERE `route_mapping`.`route_id` = '".$row_routes[0]."'";
 		$res_segments = mysqli_query($db['link'], $qry_segments);
@@ -48,10 +45,6 @@ if (mysqli_num_rows($res_routes)) {
 					$route_traveltime += ( $data[$row_segments[0]]['val'] * $row_segments[1] + $row_segments[2] * 60 );
 					//add segment length
 					$segments_available += $row_segments[3] * $row_segments[1];
-					//calculate allowable traveltime per class
-					foreach ($cfg_class[$row_segments[4]] as $class_id => $allowable_speed) {
-						$allowable_traveltime_byclass[$class_id] += ( ($row_segments[3] * $row_segments[1]) / ($allowable_speed / 3.6) );
-					}
 //					write_log($row_segments[0].': '.$data[$row_segments[0]]['val'], $data[$row_segments[0]]['time']);
 				}
 			}
@@ -123,11 +116,9 @@ if (mysqli_num_rows($res_routes)) {
 			 * determine level of service
 			*/
 			$level_of_service = 0;
-			for ($class_id = 1; $class_id < count($cfg_class_colour); $class_id++) {
-				$allowable_traveltime_byclass[$class_id] = round( $allowable_traveltime_byclass[$class_id] * $segments_total / $segments_available );
-//				write_log($class_id.' class time: '.$allowable_traveltime_byclass[$class_id]);
-				if ($route_smoothed <= $allowable_traveltime_byclass[$class_id]) {
-					$level_of_service = $class_id;
+			foreach ($cfg_LOS_boundary as $LOS => $boundary) {
+				if ($route_smoothed >= $route_freeflow * $boundary) {
+					$level_of_service = $LOS;
 				}
 				else break;
 			}
