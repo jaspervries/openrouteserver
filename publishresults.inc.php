@@ -33,7 +33,7 @@ $res_routes = mysqli_query($db['link'], $qry_routes);
 if (mysqli_num_rows($res_routes)) {
    	$html = '<table>
     <thead>
-    <tr><th>ID</th><th>Naam</th><th>Instantane<br>reistijd [min]</th><th>Afgevlakte<br>reistijd [min]</th></tr>
+    <tr><th>ID</th><th>Naam</th><th>Gemeten<br>reistijd [min]</th><th>Afgevlakte<br>reistijd [min]</th></tr>
     </thead>
     <tbody>';
 	while ($row_routes = mysqli_fetch_row($res_routes)) {
