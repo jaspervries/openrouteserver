@@ -1,7 +1,7 @@
 <?php
 /*
 *    openrouteserver - Open source NDW route configurator en server
-*    Copyright (C) 2014 Jasper Vries; Gemeente Den Haag
+*    Copyright (C) 2014 Jasper Vries, Gemeente Den Haag; 2017 Jasper Vries
 *
 *    This program is free software; you can redistribute it and/or modify
 *    it under the terms of the GNU General Public License as published by
@@ -37,7 +37,7 @@ $qry = "CREATE TABLE `route_history`
 	`value` INT(6) SIGNED NOT NULL DEFAULT -1,
 	`smoothed` INT(6) SIGNED NOT NULL DEFAULT -1,
 	`freeflow` INT(6) UNSIGNED NOT NULL DEFAULT 0,
-	`quality` INT(3) UNSIGNED NOT NULL DEFAULT 100
+	`quality` INT(3) UNSIGNED NOT NULL DEFAULT 100,
 	`level_of_service` TINYINT UNSIGNED NOT NULL DEFAULT 0,
 	CONSTRAINT `history` PRIMARY KEY (`route_id`, `time`)
 )
