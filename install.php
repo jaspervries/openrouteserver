@@ -1,7 +1,7 @@
 <?php
 /*
 *    openrouteserver - Open source NDW route configurator en server
-*    Copyright (C) 2014 Jasper Vries, Gemeente Den Haag; 2017 Jasper Vries
+*    Copyright (C) 2014,2017 Jasper Vries, Gemeente Den Haag; 2017 Jasper Vries
 *
 *    This program is free software; you can redistribute it and/or modify
 *    it under the terms of the GNU General Public License as published by
@@ -53,7 +53,6 @@ $qry = "CREATE TABLE `segments`
 	`segment_id` VARCHAR(255) NOT NULL PRIMARY KEY,
 	`name` VARCHAR(255) NULL,
 	`length` INT UNSIGNED NOT NULL,
-	`class` ENUM('R','P','G') NOT NULL DEFAULT 'R',
 	`coordinates` MEDIUMTEXT NULL
 )
 ENGINE `MyISAM`,

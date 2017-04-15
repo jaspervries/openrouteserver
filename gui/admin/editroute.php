@@ -1,7 +1,7 @@
 <?php
 /*
 *    openrouteserver - Open source NDW route configurator en server
-*    Copyright (C) 2014 Jasper Vries
+*    Copyright (C) 2014,2017 Jasper Vries
 *
 *    This program is free software; you can redistribute it and/or modify
 *    it under the terms of the GNU General Public License as published by
@@ -54,7 +54,7 @@ if (mysqli_num_rows($res)) {
 	}
 	//get segments
 	if (empty($_POST)) {
-		$qry = "SELECT `route_mapping`.`segment_id`, `route_mapping`.`multiply`, `route_mapping`.`add`, `segments`.`length`, `segments`.`class` 
+		$qry = "SELECT `route_mapping`.`segment_id`, `route_mapping`.`multiply`, `route_mapping`.`add`, `segments`.`length` 
 		FROM `route_mapping` 
 		LEFT JOIN `segments` ON `route_mapping`.`segment_id` = `segments`.`segment_id` 
 		WHERE `route_mapping`.`route_id` = '".mysqli_real_escape_string($db['link'], $_GET['routeid'])."'";
@@ -64,8 +64,7 @@ if (mysqli_num_rows($res)) {
 				$segments[] = array('id' => $seg[0],
 									'multiply' => $seg[1],
 									'add' => $seg[2],
-									'length' => $seg[3],
-									'class' => $seg[4]
+									'length' => $seg[3]
 				);
 			}
 		}
@@ -95,8 +94,7 @@ if (!empty($_POST)) {
 			$segments[] = array('id' => $segment,
 								'multiply' => $_POST['segment_multiply'][$num],
 								'add' => $_POST['segment_add'][$num],
-								'length' => $_POST['segment_length'][$num],
-								'class' => $_POST['segment_class'][$num]
+								'length' => $_POST['segment_length'][$num]
 			);
 		}
 	}
@@ -205,7 +203,7 @@ if ($insertcomplete == FALSE) {
 	?>
 	<table id="selectedsegments">
 	<thead>
-	<tr><th></th><th>ID</th><th>Lengte</th><th>Klasse</th><th>Vermenigvuldigen</th><th>Optellen</th></tr>
+	<tr><th></th><th>ID</th><th>Lengte</th><th>Vermenigvuldigen</th><th>Optellen</th></tr>
 	</thead>
 	<tbody>
     <?php
@@ -213,7 +211,6 @@ if ($insertcomplete == FALSE) {
 		echo '<tr><td><span class="removerow">[x]</span></td>
 		<td><input type="hidden" name="segment_id[]" value="'.$segment['id'].'">'.$segment['id'].'</td>
 		<td><input type="hidden" name="segment_length[]" value="'.$segment['length'].'">'.$segment['length'].'</td>
-		<td><input type="hidden" name="segment_class[]" value="'.$segment['class'].'">'.$segment['class'].'</td>
 		<td><input type="text" name="segment_multiply[]" value="'.str_replace('.', ',', $segment['multiply']).'"></td>
 		<td><input type="text" name="segment_add[]" value="'.str_replace('.', ',', $segment['add']).'"></td></tr>';
 	}

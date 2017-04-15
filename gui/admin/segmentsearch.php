@@ -1,7 +1,7 @@
 <?php
 /*
 *    openrouteserver - Open source NDW route configurator en server
-*    Copyright (C) 2014 Jasper Vries
+*    Copyright (C) 2014,2017 Jasper Vries
 *
 *    This program is free software; you can redistribute it and/or modify
 *    it under the terms of the GNU General Public License as published by
@@ -23,18 +23,18 @@ if (strlen($_GET['q']) >= 5) {
 	include('../../config.cfg.php');
 	$db['link'] = mysqli_connect($cfg_db['host'], $cfg_db['user'], $cfg_db['pass'], $cfg_db['db']);
 	
-	$qry = "SELECT `segment_id`, `length`, `class`, `name` FROM `segments` WHERE `segment_id` LIKE '%".mysqli_real_escape_string($db['link'], $_GET['q'])."%' ORDER BY `segment_id`";
+	$qry = "SELECT `segment_id`, `length`, `name` FROM `segments` WHERE `segment_id` LIKE '%".mysqli_real_escape_string($db['link'], $_GET['q'])."%' ORDER BY `segment_id`";
 	$res = mysqli_query($db['link'], $qry);
 	if (mysqli_num_rows($res)) {
 		?>
 		<table id="segmentresult">
 		<thead>
-		<tr><th></th><th>ID</th><th>Lengte</th><th>Klasse</th><th>Naam</th></tr>
+		<tr><th></th><th>ID</th><th>Lengte</th><th>Naam</th></tr>
 		</thead>
 		<tbody>
 		<?php
 		while ($row = mysqli_fetch_row($res)) {
-			echo '<tr><td><span class="selectsegment">[A]</span></td><td class="selectsegment_id">'.htmlspecialchars($row[0]).'</td><td class="selectsegment_length">'.$row[1].'</td><td class="selectsegment_class">'.$row[2].'</td><td>'.htmlspecialchars($row[3]).'</td></tr>';
+			echo '<tr><td><span class="selectsegment">[A]</span></td><td class="selectsegment_id">'.htmlspecialchars($row[0]).'</td><td class="selectsegment_length">'.$row[1].'</td><td>'.htmlspecialchars($row[3]).'</td></tr>';
 		}
 		?>
 		</tbody>

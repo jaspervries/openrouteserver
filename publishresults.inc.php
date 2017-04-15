@@ -1,7 +1,7 @@
 <?php
 /*
 *    openrouteserver - Open source NDW route configurator en server
-*    Copyright (C) 2014 Jasper Vries
+*    Copyright (C) 2014,2017 Jasper Vries
 *
 *    This program is free software; you can redistribute it and/or modify
 *    it under the terms of the GNU General Public License as published by
@@ -49,7 +49,7 @@ if (mysqli_num_rows($res_routes)) {
 			$html.= '<td style="color:#FFF;background-color:#999;">-1</td>';
 		}
 		else {
-			$html.= '<td style="color:'.$cfg_class_colour[$row_routes[3]].';background-color:#333;">';
+			$html.= '<td style="color:'.$cfg_LOS_colour[$row_routes[3]].';background-color:#333;">';
 			$html.= floor($row_routes[2]/60).':'.str_pad($row_routes[2]%60, 2, '0', STR_PAD_LEFT).'</td>';
 		}
 		//smoothed travel time

@@ -33,7 +33,7 @@ if (mysqli_num_rows($res_routes)) {
 		$segments_available = 0;
 		$segments_total = 0;
 		//get segments
-		$qry_segments = "SELECT `route_mapping`.`segment_id`, `route_mapping`.`multiply`, `route_mapping`.`add`, `segments`.`length`, `segments`.`class` FROM `route_mapping` LEFT JOIN `segments` ON `route_mapping`.`segment_id` = `segments`.`segment_id` WHERE `route_mapping`.`route_id` = '".$row_routes[0]."'";
+		$qry_segments = "SELECT `route_mapping`.`segment_id`, `route_mapping`.`multiply`, `route_mapping`.`add`, `segments`.`length` FROM `route_mapping` LEFT JOIN `segments` ON `route_mapping`.`segment_id` = `segments`.`segment_id` WHERE `route_mapping`.`route_id` = '".$row_routes[0]."'";
 		$res_segments = mysqli_query($db['link'], $qry_segments);
 		if (mysqli_num_rows($res_segments)) {
 			while ($row_segments = mysqli_fetch_row($res_segments)) {
@@ -116,11 +116,14 @@ if (mysqli_num_rows($res_routes)) {
 			 * determine level of service
 			*/
 			$level_of_service = 0;
-			foreach ($cfg_LOS_boundary as $LOS => $boundary) {
-				if ($route_smoothed >= $route_freeflow * $boundary) {
-					$level_of_service = $LOS;
+			if ($segments_total > 0) {
+				foreach ($cfg_LOS_boundary as $LOS => $boundary) {
+					//use speed for calculation
+					if (($segments_total / $route_smoothed) >= ($segments_total / $route_freeflow) * $boundary) {
+						$level_of_service = $LOS;
+					}
+					else break;
 				}
-				else break;
 			}
 //			write_log('los: '.$level_of_service);
 			/*

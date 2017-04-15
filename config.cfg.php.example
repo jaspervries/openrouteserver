@@ -34,4 +34,16 @@ $cfg_data['gz'] = FALSE;
 //supplier identification
 $cfg_supplier_prefix = 'X-example';
 $cfg_site_prefix = 'X-example_ORS';
+
+//level of service boundaries
+//LOS is applied if current/freeflow > value set below
+$cfg_LOS_boundary[0] = 0;
+$cfg_LOS_boundary[1] = 0.2;
+$cfg_LOS_boundary[2] = 0.45;
+$cfg_LOS_boundary[3] = 0.7;
+//colours for LOS
+$cfg_LOS_colour[0] = '#CC0000';
+$cfg_LOS_colour[1] = '#FF9900';
+$cfg_LOS_colour[2] = '#FFFF00';
+$cfg_LOS_colour[3] = '#33CC00';
 ?>

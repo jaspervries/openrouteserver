@@ -1,7 +1,7 @@
 <?php
 /*
 *    openrouteserver - Open source NDW route configurator en server
-*    Copyright (C) 2014 Jasper Vries
+*    Copyright (C) 2014,2017 Jasper Vries
 *
 *    This program is free software; you can redistribute it and/or modify
 *    it under the terms of the GNU General Public License as published by
@@ -21,7 +21,6 @@
 //connect database
 include('../config.cfg.php');
 $db['link'] = mysqli_connect($cfg_db['host'], $cfg_db['user'], $cfg_db['pass'], $cfg_db['db']);
-include('../segmentclasses.cfg.php');
 
 $qry_routes = "SELECT `route_history`.`route_id`, `route_history`.`time`, `route_history`.`value`, `route_history`.`level_of_service`, `routes`.`name`, `route_history`.`smoothed` FROM `route_history`
 INNER JOIN (SELECT `route_id`, MAX(`time`) AS `mtime` FROM `route_history`

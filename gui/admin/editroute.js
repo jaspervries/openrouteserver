@@ -1,6 +1,6 @@
 /*
 *    openrouteserver - Open source NDW route configurator en server
-*    Copyright (C) 2014 Jasper Vries
+*    Copyright (C) 2014,2017 Jasper Vries
 *
 *    This program is free software; you can redistribute it and/or modify
 *    it under the terms of the GNU General Public License as published by
@@ -35,9 +35,8 @@ $(document).ready( function() {
 			$('.selectsegment').click( function () {
 				var segment_id = $(this).parentsUntil('tr').parent().children('.selectsegment_id').html();
 				var segment_length = $(this).parentsUntil('tr').parent().children('.selectsegment_length').html();
-				var segment_class = $(this).parentsUntil('tr').parent().children('.selectsegment_class').html();
 				
-				var appendcontent = $('<tr><td class="removerowtd"></td><td><input type="hidden" name="segment_id[]" value="'+segment_id+'">'+segment_id+'</td><td><input type="hidden" name="segment_length[]" value="'+segment_length+'">'+segment_length+'</td><td><input type="hidden" name="segment_class[]" value="'+segment_class+'">'+segment_class+'</td><td><input type="text" name="segment_multiply[]" value="1"></td><td><input type="text" name="segment_add[]" value="0"></td></tr>');
+				var appendcontent = $('<tr><td class="removerowtd"></td><td><input type="hidden" name="segment_id[]" value="'+segment_id+'">'+segment_id+'</td><td><input type="hidden" name="segment_length[]" value="'+segment_length+'">'+segment_length+'</td><td><input type="text" name="segment_multiply[]" value="1"></td><td><input type="text" name="segment_add[]" value="0"></td></tr>');
 				var appendcontent2 = $('<span class="removerow">[x]</span>');
 				$(appendcontent).children('td.removerowtd').append(appendcontent2);
 				appendcontent2.click( function () { $(this).parentsUntil('tr').parent().remove(); });

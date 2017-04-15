@@ -28,7 +28,6 @@ $db['link'] = mysqli_connect($cfg_db['host'], $cfg_db['user'], $cfg_db['pass'], 
 
 //include log function
 include('log.inc.php');
-include('segmentclasses.cfg.php');
 
 set_time_limit(0); 
 ini_set("memory_limit","1G");
@@ -63,34 +62,15 @@ if ($datex !== FALSE) {
 						$coordinates .= $locationContainedInItinerary->location->linearExtension->linearByCoordinatesExtension->linearCoordinatesEndPoint->pointCoordinates->latitude.','.$locationContainedInItinerary->location->linearExtension->linearByCoordinatesExtension->linearCoordinatesEndPoint->pointCoordinates->longitude."\n";
 					}
 					if ($segmentlength > 0) {
-						//decide segment class
-						$segmentclass = 'P';
-						foreach ($cfg_class_G as $class) {
-							if (stripos($segmentid, $class) === 0) {
-								$segmentclass = 'G';
-								break;
-							}
-						}
-						if ($segmentclass == 'P') {
-							foreach ($cfg_class_R as $class) {
-								if (stripos($segmentid, $class) === 0) {
-									$segmentclass = 'R';
-									break;
-								}
-							}
-						}
-						
 						//insert in database
 						$qry = "INSERT INTO `segments` SET
 						`segment_id` = '".mysqli_real_escape_string($db['link'], $segmentid)."',
 						`name` = '".mysqli_real_escape_string($db['link'], $segmentname)."',
 						`length` = '".mysqli_real_escape_string($db['link'], $segmentlength)."',
-						`class` = '".$segmentclass."',
 						`coordinates` = '".mysqli_real_escape_string($db['link'], $coordinates)."'
 						ON DUPLICATE KEY UPDATE
 						`name` = '".mysqli_real_escape_string($db['link'], $segmentname)."',
 						`length` = '".mysqli_real_escape_string($db['link'], $segmentlength)."',
-						`class` = '".$segmentclass."',
 						`coordinates` = '".mysqli_real_escape_string($db['link'], $coordinates)."'";
 						mysqli_query($db['link'], $qry);
 						echo mysqli_error($db['link']);
