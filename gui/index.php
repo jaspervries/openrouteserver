@@ -30,9 +30,5 @@
 <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
-<div id="routes"></div>
-<div id="chartdialog">
-	<div id="chart_div" style="width: 700px; height: 400px;"></div>
-</div>
 </body>
 </html>

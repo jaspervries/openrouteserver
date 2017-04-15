@@ -1,6 +1,6 @@
 /*
 *    openrouteserver - Open source NDW route configurator en server
-*    Copyright (C) 2014 Jasper Vries; Gemeente Den Haag
+*    Copyright (C) 2014,2017 Jasper Vries; 2014 Gemeente Den Haag
 *
 *    This program is free software; you can redistribute it and/or modify
 *    it under the terms of the GNU General Public License as published by
@@ -19,8 +19,10 @@
 
 google.load("visualization", "1", {packages:["corechart"]});
 
-function drawChart(data) {
-	var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+function drawChart(id, data) {
+	console.log(document.getElementById(id));
+	var chart = new google.visualization.LineChart(document.getElementById(id));
+	
 	var options = {
 		width: 700,
         height: 400,
@@ -54,11 +56,28 @@ function drawChart(data) {
 }
 
 function showChart(id) {
-	$('#chartdialog').dialog('option', 'title', 'Laden...');
-	$('#chartdialog').dialog('open');
+	//add dialog div
+	var div_id = 'dialog' + id;
+	var chart_id = 'chart' + id;
+	//add html div
+	if($("#" + div_id).length == 0) {
+		$('body').append('<div class="dialog" id="' + div_id + '">Grafiek wordt geladen</div>');
+	}
+	//create dialog
+	$('#' + div_id).dialog({
+		height: 460,
+		width: 740,
+		title: 'Laden...',
+		close: function() {
+			//remove dialog on close
+			$(this).remove();
+		}
+	});
 	
+	//load dialog content
 	$.getJSON('chart.php', { q: id } ).done(function( data ) {
-		$('#chartdialog').dialog('option', 'title', data['name']);
+		$('#' + div_id).dialog('option', 'title', data['name']);
+		$('#' + div_id).html('<div id="' + chart_id + '" style="width: 700px; height: 400px;"></div>');
 		
 		var dataTable = new google.visualization.DataTable();
 		dataTable.addColumn('datetime', 'tijdstip');
@@ -76,7 +95,7 @@ function showChart(id) {
 			]);
 		});
 		
-		drawChart(dataTable);
+		drawChart(chart_id, dataTable);
 	});
 	
 }
@@ -88,11 +107,16 @@ function loadRoutes() {
 }
 
 $(document).ready( function() {
-	$('#chartdialog').dialog( {
-		autoOpen: false,
-		title: 'Laden...',
-		height: 460,
-		width: 740
+	$('body').html('<div id="routes"></div>');
+	
+	//sluit alle dialogs wanneer op delete (46) wordt gedrukt
+	$(document).keyup(function( event ) {
+		if (event.which == 46) {
+			//behalve wanneer in input veld
+			if (!($('input').is(':focus'))) {
+				$('.dialog').dialog('close');
+			}
+		}
 	});
 	
 	loadRoutes();
