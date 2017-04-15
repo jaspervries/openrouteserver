@@ -1,7 +1,7 @@
 <?php
 /*
 *    openrouteserver - Open source NDW route configurator en server
-*    Copyright (C) 2014 Jasper Vries
+*    Copyright (C) 2014,2017 Jasper Vries
 *
 *    This program is free software; you can redistribute it and/or modify
 *    it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@ if ($datex !== FALSE) {
 	try {			
 		$datex = @simplexml_load_string($datex);
 		if ($datex !== FALSE) {
-			$datex = $datex->children('soap', true)->Body->children(); //read soap envelope
+			$datex = $datex->children('SOAP', true)->Body->children(); //read soap envelope
 			//get publication time
 			$oldpublicationtime = $publicationtime;
 			$publicationtime = $datex->d2LogicalModel->payloadPublication->publicationTime;
