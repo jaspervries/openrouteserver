@@ -56,13 +56,14 @@ if (mysqli_num_rows($res_routes)) {
 		if ($row_routes[5] == -1) {
 			$html.= '<td style="color:#FFF;background-color:#999;">-1</td>';
 		}
-		elseif ($row_routes[6] < 100) {
-			$html.= '<td style="color:'.$cfg_class_colour[$row_routes[3]].';background-color:#999;">';
-			$html.= floor($row_routes[5]/60).':'.str_pad($row_routes[5]%60, 2, '0', STR_PAD_LEFT).'</td>';
-		}
 		else {
-			$html.= '<td style="color:'.$cfg_class_colour[$row_routes[3]].';background-color:#333;">';
-			$html.= floor($row_routes[5]/60).':'.str_pad($row_routes[5]%60, 2, '0', STR_PAD_LEFT).'</td>';
+			if ($row_routes[6] < 100) {
+				$html.= '<td style="color:'.$cfg_LOS_colour[$row_routes[3]].';background-color:#999;">';
+			}
+			else {
+				$html.= '<td style="color:'.$cfg_LOS_colour[$row_routes[3]].';background-color:#333;">';
+			}
+			$html.= round($row_routes[5]/60).':00</td>';
 		}
 		$html.= '</tr>';
 	}

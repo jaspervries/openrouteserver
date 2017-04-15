@@ -42,12 +42,12 @@ if (mysqli_num_rows($res)) {
 			date('H',$row[0]), 
 			date('i',$row[0]), 
 			date('s',$row[0]), 
-			round($row[1]/60,1), 
+			round($row[1]/60,2), 
 			floor($row[1]/60).':'.str_pad($row[1]%60, 2, '0', STR_PAD_LEFT), 
-			round($row[2]/60,1), 
-			floor($row[2]/60).':'.str_pad($row[2]%60, 2, '0', STR_PAD_LEFT), 
+			round($row[2]/60), 
+			round($row[2]/60).':'.str_pad($row[2]%60, 2, '0', STR_PAD_LEFT), 
 			(int) $row[3], 
-			round($row[4]/60,1), 
+			round($row[4]/60), 
 			floor($row[4]/60).':'.str_pad($row[4]%60, 2, '0', STR_PAD_LEFT));
 		}
 	}
