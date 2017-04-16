@@ -29,11 +29,13 @@ if (!function_exists('createJsonPublication')) { function createJsonPublication(
 		if (isset($row['quality']) && ($row['quality'] < 100)) {
 			$json['data'][] = array( 'id' => $row['id'], //id
 								'duration' => (int) $row['duration'], //duration
+								'staticReferenceValue' => (int) $row['freeflow'], //freeflow
 								'quality' => (int) $row['quality']); //quality
 		}
 		else {
 			$json['data'][] = array( 'id' => $row['id'], //id
-								'duration' => (int) $row['duration']); //duration
+								'duration' => (int) $row['duration'], //duration
+								'staticReferenceValue' => (int) $row['freeflow']); //freeflow
 		}
 	}
 	$json = json_encode($json);

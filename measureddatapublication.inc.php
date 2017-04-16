@@ -68,9 +68,19 @@ if (!function_exists('createMeasuredDataPublication')) { function createMeasured
 			$basicData->addAttribute('xsi_type', 'TravelTimeData');
 			$basicData->addChild('travelTimeType', 'best');
 		$travelTime = $basicData->addChild('travelTime');
-			$travelTime->addAttribute('xsi_type', 'DurationValue');
+			//$travelTime->addAttribute('xsi_type', 'DurationValue');
 			if (isset($row['quality']) && ($row['quality'] < 100)) $travelTime->addAttribute('supplierCalculatedDataQuality', $row['quality']); //quality
 			$travelTime->addChild('duration', $row['duration']); //duration
+		//freeflow
+		$measuredValueExtension = $measuredValue->addChild('measuredValueExtension');
+		$measuredValueExtended = $measuredValueExtension->addChild('measuredValueExtended');
+		$basicDataReferenceValue = $measuredValueExtended->addChild('basicDataReferenceValue');
+			$basicDataReferenceValue->addChild('referenceValueType', 'staticReferenceValue');
+		$travelTimeData = $basicDataReferenceValue->addChild('travelTimeData');
+			$travelTimeData->addChild('travelTimeType', 'reconstituted');
+		$travelTime = $travelTimeData->addChild('travelTime');
+			//$travelTime->addAttribute('xsi_type', 'DurationValue');
+			$travelTime->addChild('duration', $row['freeflow']); //freeflow
 	}
 	//format XML
 	$dom = dom_import_simplexml($xml)->ownerDocument;

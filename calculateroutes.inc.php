@@ -96,6 +96,7 @@ if (mysqli_num_rows($res_routes)) {
 				//otherwise store current value as smoothed value
 				$route_smoothed = $route_traveltime;
 				$route_smoothed_quality = 100;
+				$row_smoothed[3] = $route_traveltime;
 			}
 			/*
 			 * determine freeflow value
@@ -132,9 +133,7 @@ if (mysqli_num_rows($res_routes)) {
 			$qry_update = "INSERT IGNORE INTO `route_history` SET `route_id` = '".$row_routes[0]."', `time` = '".$publicationtime."', `value` = '".$route_traveltime."', `smoothed` = '".$route_smoothed."', `quality` = '".$route_smoothed_quality."', `level_of_service` = '".$level_of_service."', `freeflow` = '".$route_freeflow."'";
 			mysqli_query($db['link'], $qry_update);
 			//cache result for datex feed
-			$datexfeed[] = array('id' => $cfg_site_prefix.$row_routes[0], 'duration' => $route_traveltime);
-			$datexfeed[] = array('id' => $cfg_site_prefix.$row_routes[0].'_s', 'duration' => $route_smoothed, 'quality' => $route_smoothed_quality);
-			$datexfeed[] = array('id' => $cfg_site_prefix.$row_routes[0].'_f', 'duration' => $route_freeflow);
+			$datexfeed[] = array('id' => $cfg_site_prefix.$row_routes[0], 'duration' => $route_smoothed, 'quality' => $route_smoothed_quality, 'freeflow' => $route_freeflow);
 		}
 	}
 	//publish DATEX-II

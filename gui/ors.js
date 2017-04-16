@@ -40,6 +40,7 @@ function drawChart(id, data) {
 		},
 		vAxes: [
 			{title: 'Reistijd [min]',
+			minValue: -1,
 			gridlines: {count: 7}
 			},
 			{title: 'Level of Service',
