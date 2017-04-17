@@ -103,7 +103,17 @@ if (mysqli_num_rows($res_routes)) {
 			*/
 			if (((date('G', $publicationtime) >= 22) || (date('G', $publicationtime) < 6)) && ($route_traveltime > 0)) {
 				//if in night
-				$route_freeflow = round($route_traveltime * ($reg['ema_alpha_freeflow']) + $row_smoothed[3] * (1 - $reg['ema_alpha_freeflow']));
+				$route_freeflow = $route_traveltime * ($reg['ema_alpha_freeflow']) + $row_smoothed[3] * (1 - $reg['ema_alpha_freeflow']);
+				//always shave at least a second of if difference > 10
+				if ($route_traveltime > $row_smoothed[3] + 10) {
+					$route_freeflow = ceil($route_freeflow);
+				}
+				elseif ($route_traveltime < $row_smoothed[3] - 10) {
+					$route_freeflow = floor($route_freeflow);
+				}
+				else {
+					$route_freeflow = round($route_freeflow);
+				}
 			}
 			elseif (($row_smoothed[3] == 0) && ($route_traveltime > 0)) {
 				//if no previous freeflow
